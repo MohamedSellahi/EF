@@ -1,7 +1,10 @@
 ﻿using System.Data.Entity;
 using Model;
+using MySql.Data.Entity;
 
 namespace DataAccess {
+
+   [DbConfigurationType(typeof(MySqlEFConfiguration))]
    public class BreakAwayContext : DbContext{
       public BreakAwayContext():base("baga") {
          

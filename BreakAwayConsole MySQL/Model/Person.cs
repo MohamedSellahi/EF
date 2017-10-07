@@ -14,7 +14,7 @@ namespace Model {
       [Key]
       public int ParsonId { get; set; }
 
-      [ConcurrencyCheck]
+      //[ConcurrencyCheck]
       public int SocialSecurityNumber { get; set; }
 
       public string FirstName { get; set; }

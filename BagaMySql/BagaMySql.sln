@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BagaMySql", "BagaMySql\BagaMySql.csproj", "{2EE1167B-4314-4B7E-8080-4C138BEB8B4A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{4375B81A-BE69-42D3-BA41-29FE831C2CD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{D57B50C7-CFC8-4D2D-9418-C2BFBD70C46B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2EE1167B-4314-4B7E-8080-4C138BEB8B4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EE1167B-4314-4B7E-8080-4C138BEB8B4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EE1167B-4314-4B7E-8080-4C138BEB8B4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EE1167B-4314-4B7E-8080-4C138BEB8B4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4375B81A-BE69-42D3-BA41-29FE831C2CD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4375B81A-BE69-42D3-BA41-29FE831C2CD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4375B81A-BE69-42D3-BA41-29FE831C2CD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4375B81A-BE69-42D3-BA41-29FE831C2CD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D57B50C7-CFC8-4D2D-9418-C2BFBD70C46B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D57B50C7-CFC8-4D2D-9418-C2BFBD70C46B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D57B50C7-CFC8-4D2D-9418-C2BFBD70C46B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D57B50C7-CFC8-4D2D-9418-C2BFBD70C46B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B302FE11-FCD6-4FBE-81D1-09F4818A7774}
+	EndGlobalSection
+EndGlobal

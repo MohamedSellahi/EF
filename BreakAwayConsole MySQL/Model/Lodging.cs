@@ -22,13 +22,13 @@ namespace Model {
 
       public int? PrimaryContactId { get; set; }
 
-      [InverseProperty("PrimaryContactFor")]
+      //[InverseProperty("PrimaryContactFor")]
       [ForeignKey("PrimaryContactId")]
       public Person PrimaryContact { get; set; }
 
       public int? SecondaryContactId { get; set; }
 
-      [InverseProperty("SecondaryContactFor")]
+      //[InverseProperty("SecondaryContactFor")]
       [ForeignKey("SecondaryContactId")]
       public Person SecondaryContact { get; set; }
    }
