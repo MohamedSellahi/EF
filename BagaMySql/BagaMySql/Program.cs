@@ -11,12 +11,12 @@ namespace BagaMySql {
    class Program {
       static void Main(string[] args) {
          using (BagaDb db = new BagaDb()) {
-            var p = db.People.Find(1);
-            db.People.Remove(p);
+            db.People.Add(new Person { LastName = "Sellahi", FirstName = "Mohamed" });
             db.SaveChanges();
          }
-
       }
+
    }
 }
+
 

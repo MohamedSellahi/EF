@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model {
+namespace Models {
    public class Payment {
       public Payment() {
          PaymentDate = DateTime.Now;
@@ -14,7 +14,5 @@ namespace Model {
       public int ReservationId { get; set; }
       public DateTime PaymentDate { get; set; }
       public decimal Amount { get; set; }
-
    }
 }
-

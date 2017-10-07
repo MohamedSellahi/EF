@@ -2,7 +2,7 @@
 using Model;
 using System.Collections.Generic;
 namespace DataAccess {
-  public class InitializeBagaDatabaseWithSeedData : DropCreateDatabaseAlways<BreakAwayContext> {
+  public class InitializeBagaDatabaseWithSeedData : CreateDatabaseIfNotExists<BreakAwayContext> {
 
       protected override void Seed(BreakAwayContext context) {
          context.Destinations.Add(
