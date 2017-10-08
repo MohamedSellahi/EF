@@ -17,8 +17,153 @@ namespace BreakAwayConsole {
          //printAllAustralienDestinations();
          //printDestinationNameOnly();
          //FindDestination();
-         FindGreatBarrierReef();
+         //FindGreatBarrierReef();
+         //getLocalDestinationCount();
+         //getLocalDestinationCountWithLoad();
+         //loadAustralianDestinations();
+         //localLinqQuaries();
+         //ListenToLocalChanges();
 
+         // Lazy Loading scinario
+         //testLazyLoading();
+
+         // Eager loading 
+         //testEagerLoading();
+         getPrimaryContactsForAllLodgins();
+
+      }
+
+      private static void getPrimaryContactsForAllLodgins() {
+         using (var db = new BreakAwayContext()) {
+            var allDestinations = db.Destinations
+                     .Include(d => d.Lodgings
+                                    .Select(l => l.PrimaryContact));
+                     
+            foreach (Destination dest in allDestinations) {
+               Console.WriteLine(dest.Name);
+               foreach (var lodg in dest.Lodgings) {
+                  var contact1 = lodg.PrimaryContact?.FullName;
+
+                  if (contact1 != null) {
+                  Console.WriteLine(" - " + lodg.Name + " --> Contact: " + contact1 );
+                  }
+                  else {
+                     Console.WriteLine(" - " + lodg.Name + " --> Contact: " + "None");
+                  }
+                  
+               }
+            }
+         }
+      }
+
+      private static void testEagerLoading() {
+         using (var db = new BreakAwayContext()) {
+            var allDestinations = db.Destinations
+                                    .Include(d => d.Lodgings)
+                                    ;
+            foreach (Destination dest in allDestinations) {
+               Console.WriteLine(dest.Name);
+               foreach (var lodg in dest.Lodgings) {
+                  Console.WriteLine(" - " + lodg.Name);
+               }
+            }
+         }
+      }
+
+      private static void testLazyLoading() {
+         using (var db = new BreakAwayContext()) {
+
+            var query = from d in db.Destinations
+                        where d.Name == "Grand Canyon"
+                        select d;
+
+            var canyon = query.Single();
+            Console.WriteLine("Grand Canyon Loadgin:");
+            if (canyon.Lodgings != null) {
+               foreach (var item in canyon.Lodgings) {
+                  Console.WriteLine(item.Name);
+               }
+            }
+         }
+      }
+
+      private static void ListenToLocalChanges() {
+         using (var db = new BreakAwayContext()) {
+            // subscribe to events 
+            db.Destinations.Local.CollectionChanged += (sender, args) => {
+               if (args.NewItems != null) {
+                  foreach (Destination dest in args.NewItems) {
+                     Console.WriteLine("Added:" + dest.Name);
+                  }
+               }
+               if (args.OldItems != null) {
+                  foreach (Destination dest in args.OldItems) {
+                     Console.WriteLine("Removed:" + dest.Name);
+                  }
+               }
+            };
+
+            db.Destinations.Load();
+         }
+      }
+
+      private static void localLinqQuaries() {
+         using (var db = new BreakAwayContext()) {
+            db.Destinations.Load();
+
+            var storedDestinations = from d in db.Destinations.Local
+                                     orderby d.Name
+                                     select d;
+
+            Console.WriteLine("All Destinations: ");
+            foreach (var dest in storedDestinations) {
+               Console.WriteLine(dest.Name);
+            }
+
+            var aussiDestinations = from d in db.Destinations.Local
+                                    where d.Country == "Australia"
+                                    select d;
+            Console.WriteLine();
+            Console.WriteLine("Australian destinations:");
+            foreach (var dest in aussiDestinations) {
+               Console.WriteLine(dest.Name);
+            }
+         }
+      }
+
+      private static void loadAustralianDestinations() {
+         using (var db = new BreakAwayContext()) {
+            var query = from d in db.Destinations
+                        where d.Country == "Australia"
+                        select d;
+            query.Load();
+            //query = from d in db.Destinations
+            //            where d.Country == "USA"
+            //            select d;
+            //query.Load();
+
+            var count = db.Destinations.Local.Count;
+            Console.WriteLine("Aussie destination in memory: {0}", count);
+         }
+      }
+
+      private static void getLocalDestinationCountWithLoad() {
+         using (var db = new BreakAwayContext()) {
+            db.Destinations.Load();
+            var count = db.Destinations.Local.Count;
+            Console.WriteLine("Destinations in memory: {0}", count);
+         }
+      }
+
+      private static void getLocalDestinationCount() {
+         using (var db = new BreakAwayContext()) {
+
+            foreach (Destination dest in db.Destinations) {
+               Console.WriteLine(dest.Name);
+            }
+            var count = db.Destinations.Local.Count;
+            Console.WriteLine("Destinations in memory: {0}", count);
+         }
       }
 
       private static void FindGreatBarrierReef() {

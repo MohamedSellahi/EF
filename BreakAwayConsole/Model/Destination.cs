@@ -21,6 +21,6 @@ namespace Model {
       public byte[] Photo { get; set; }
       public string TravelWarnings { get; set; }
       public string ClimatInfo { get; set; }
-      public List<Lodging> Lodgings { get; set; }
+      public virtual List<Lodging> Lodgings { get; set; }
    }
 }
