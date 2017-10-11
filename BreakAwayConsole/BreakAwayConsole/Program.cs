@@ -23,14 +23,127 @@ namespace BreakAwayConsole {
          //loadAustralianDestinations();
          //localLinqQuaries();
          //ListenToLocalChanges();
-
          // Lazy Loading scinario
          //testLazyLoading();
-
          // Eager loading 
          //testEagerLoading();
-         getPrimaryContactsForAllLodgins();
+         //getPrimaryContactsForAllLodgins();
+         //testExplicitLoading();
+         //testIsLoaded();
+         //queryLodgingDistanceV1();
+         //queryLodginDistaceV2();
+         //queryLodginCount();
 
+         //LoadingASubSet();
+
+      }
+
+      private static void LoadingASubSet() {
+         using (var db = new BreakAwayContext()) {
+            var canyonQuery = from d in db.Destinations
+                              where d.Name == "Grand Canyon"
+                              select d;
+
+            var canyon = canyonQuery.Single();
+            var lodgingQuery = db.Entry(canyon)
+                                 .Collection(d => d.Lodgings)
+                                 .Query()
+                                 .Where(l => l.Name.Contains("Hotel"))
+                                 .Select(l => l.Name);
+            foreach (var item in lodgingQuery) {
+               Console.WriteLine(item);
+            }
+         }
+      }
+
+      private static void queryLodginCount() {
+         using (var db = new BreakAwayContext()) {
+            var canyonQuery = from d in db.Destinations
+                              where d.Name == "Grand Canyon"
+                              select d;
+
+            var canyon = canyonQuery.Single();
+            var lodgingQuery = db.Entry(canyon).Collection(d => d.Lodgings).Query();
+
+            var lodgingCount = lodgingQuery.Count();
+            Console.WriteLine("Lodgins at Grand Canyon: " + lodgingCount);
+         }
+      }
+
+      private static void queryLodginDistaceV2() {
+         using (var db = new BreakAwayContext()) {
+            var canyonQuery = from d in db.Destinations
+                              where d.Name == "Grand Canyon"
+                              select d;
+
+            var canyon = canyonQuery.Single();
+
+            var lodginQuery = db.Entry(canyon)
+                                 .Collection(d => d.Lodgings)
+                                 .Query();
+
+            var distanceQuery = from l in lodginQuery
+                                where l.MilesFromNearestAirport <= 10
+                                select l;
+
+            foreach (var item in distanceQuery) {
+               Console.WriteLine(item.Name);
+            }
+         }
+      }
+
+      private static void queryLodgingDistanceV1() {
+         using (var db = new BreakAwayContext()) {
+            var canyonQuery = from d in db.Destinations
+                              where d.Name == "Grand Canyon"
+                              select d;
+
+            var canyon = canyonQuery.Single();
+
+            var distanceQuery = from l in canyon.Lodgings
+                                where l.MilesFromNearestAirport <= 10
+                                select l;
+
+            foreach (var item in distanceQuery) {
+               Console.WriteLine(item.Name);
+            }
+         }
+      }
+
+      private static void testIsLoaded() {
+         using (var db = new BreakAwayContext()) {
+            var canyon = (from d in db.Destinations
+                          where d.Name == "Grand Canyon"
+                          select d).Single();
+            var entry = db.Entry(canyon);
+            Console.WriteLine("Before load: {0}", entry.Collection(d => d.Lodgings).IsLoaded);
+            entry.Collection(d => d.Lodgings).Load();
+            Console.WriteLine("After load: {0}", entry.Collection(d => d.Lodgings).IsLoaded);
+         }
+      }
+
+      private static void testExplicitLoading() {
+         using (var db = new BreakAwayContext()) {
+            var query = from d in db.Destinations
+                        where d.Name == "Grand Canyon"
+                        select d;
+
+            var canyon = query.Single();
+            db.Entry(canyon)
+               .Collection(d => d.Lodgings)
+               .Load();
+            Console.WriteLine("Grand Canyon lodgings:");
+
+            foreach (var lodg in canyon.Lodgings) {
+               Console.WriteLine(lodg.Name);
+            }
+            // loading a person 
+            var lodgin = db.Lodgings.First();
+            db.Entry(lodgin).Reference(l => l.PrimaryContact).Load();
+            if (lodgin.PrimaryContact != null) {
+               Console.WriteLine(lodgin.PrimaryContact.FullName);
+            }
+         }
       }
 
       private static void getPrimaryContactsForAllLodgins() {
@@ -38,19 +151,19 @@ namespace BreakAwayConsole {
             var allDestinations = db.Destinations
                      .Include(d => d.Lodgings
                                     .Select(l => l.PrimaryContact));
-                     
+
             foreach (Destination dest in allDestinations) {
                Console.WriteLine(dest.Name);
                foreach (var lodg in dest.Lodgings) {
                   var contact1 = lodg.PrimaryContact?.FullName;
 
                   if (contact1 != null) {
-                  Console.WriteLine(" - " + lodg.Name + " --> Contact: " + contact1 );
+                     Console.WriteLine(" - " + lodg.Name + " --> Contact: " + contact1);
                   }
                   else {
                      Console.WriteLine(" - " + lodg.Name + " --> Contact: " + "None");
                   }
-                  
+
                }
             }
          }
