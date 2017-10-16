@@ -11,6 +11,7 @@ namespace BreakAwayConsole {
    class Program {
       static void Main(string[] args) {
          Database.SetInitializer(new InitializeBagaDatabaseWithSeedData());
+         #region Chapter 1
          //printAllDestinations();
          //printAllDestinationsTwice();
          //printAllDestinationsOrdred();
@@ -33,9 +34,121 @@ namespace BreakAwayConsole {
          //queryLodgingDistanceV1();
          //queryLodginDistaceV2();
          //queryLodginCount();
-
          //LoadingASubSet();
+         #endregion
 
+         #region Chapter3
+         // add new entities 
+         //AddMachuPicchu();
+         // Change existing entites
+         //ChangeGrandCanyon();
+         // delete entity 
+         // removeWineBay();
+         // deleting object with realted data 
+         // delete parent, optional child 
+         // addReservation();
+
+         // exemple of on delete set null
+         // deleteTrip();
+
+         // exemple of on delete cascade
+         deleteGrandCanyonDestination();
+
+
+
+         #endregion
+
+      }
+
+      // illustration of delete on cascade 
+      private static void deleteGrandCanyonDestination() {
+         using (var db = new BreakAwayContext()) {
+            var canyon = (from d in db.Destinations
+                          where d.Name == "Grand Canyon"
+                          select d).Single();
+
+            // load related data to be deleted 
+            // this can be omitted since the data base 
+            // is configured on cascade on delete 
+            db.Entry(canyon).Collection(d => d.Lodgings).Load();
+            db.Destinations.Remove(canyon);
+            db.SaveChanges();
+         }
+      }
+
+      private static void deleteTrip() {
+         using (var db = new BreakAwayContext()) {
+            var trip = (from t in db.Trips
+                        where t.Description == "Trip from database"
+                        select t).Single();
+            // this is needed because of the foreign key contraint
+            var res = (from r in db.Reservations
+                       where r.Trip.Description == trip.Description
+                       select r).Single();
+            
+            db.Trips.Remove(trip);
+            db.SaveChanges();
+         }
+      }
+
+      private static void addReservation() {
+         using (var db = new BreakAwayContext()) {
+            var dest = db.Destinations.FirstOrDefault();
+            var trip = new Trip {
+               StartDate = DateTime.Now,
+               EndDate = DateTime.Now + new TimeSpan(10, 0, 0, 0),
+               Description = "Trip from database",
+               Destination = dest
+            };
+
+            var res = new Reservation {
+               DateTimeMade = DateTime.Now,
+               Trip = trip,
+            };
+            try {
+               db.Trips.Add(trip);
+               db.Reservations.Add(res);
+               db.SaveChanges();
+            }
+            catch (Exception e) {
+               Console.WriteLine(e.Message);
+            }
+           
+         }
+      }
+
+      private static void removeWineBay() {
+         using (var db = new BreakAwayContext()) {
+            var bay = (from d in db.Destinations
+                       where d.Name == "Wine Glass Bay"
+                       select d).Single();
+            if (bay != null) {
+               db.Destinations.Remove(bay);
+               db.SaveChanges();
+            }
+         }
+      }
+
+      private static void ChangeGrandCanyon() {
+         using (var db = new BreakAwayContext()) {
+            var canyon = db.Destinations.Where(d => d.Name == "Grand canyon")
+                                        .Select(d => d)
+                                        .Single();
+            canyon.Description = "227 mile long canyon..";
+            db.SaveChanges();
+         }
+      }
+
+      private static void AddMachuPicchu() {
+         using (var db = new BreakAwayContext()) {
+            var machuPicchu = new Destination {
+               Name = "Machu Picchu",
+               Country = "Peru"
+            };
+
+            db.Destinations.Add(machuPicchu);
+            db.SaveChanges();
+         }
       }
 
       private static void LoadingASubSet() {
