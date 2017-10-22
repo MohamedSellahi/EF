@@ -17,7 +17,9 @@
 
     @foreach(var item in Model) {
        <tr>
-           <td>@Html.DisplayFor(modeItem=>item.Name)</td>
+           <td>
+              @Html.ActionLink(item.Name,"Index","Products",new { category = item.Name},null)
+          </td>
            <td>
                @Html.ActionLink("Edit","Edit", new { id=item.ID})|
                @Html.ActionLink("Details", "Details", new { id=item.ID})|

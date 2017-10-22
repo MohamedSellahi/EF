@@ -14,7 +14,8 @@ namespace BabyStore.Controllers {
       
       // GET: Category
       public ActionResult Index() {
-         return View(db.Categories.ToList());
+
+         return View(db.Categories.OrderBy(c=>c.Name).ToList());
       }
 
 
@@ -94,6 +95,14 @@ namespace BabyStore.Controllers {
          db.Categories.Remove(category);
          db.SaveChanges();
          return RedirectToAction("Index");
+      }
+
+
+      protected override void Dispose(bool disposing) {
+         if (disposing) {
+            db.Dispose();
+         }
+         base.Dispose(disposing);
       }
 
    }
