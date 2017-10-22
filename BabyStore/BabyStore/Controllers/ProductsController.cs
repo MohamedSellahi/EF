@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using BabyStore.DAL;
 using BabyStore.Models;
+using BabyStore.ViewModels;
 
 namespace BabyStore.Controllers {
    public class ProductsController : Controller {
@@ -15,17 +16,37 @@ namespace BabyStore.Controllers {
 
       // GET: Products
       public ActionResult Index(string category, string search) {
-         var products = db.Products.Include(p => p.Category);
-         if (!String.IsNullOrEmpty(category)) {
-            products = products.Where(p => p.Category.Name == category);
-         }
+         // instantiate a new view model 
+         ProductIndexviewModel viewModel = new ProductIndexviewModel();
 
+         // select the products 
+         var products = db.Products.Include(p => p.Category);
+
+         // perfom the search and save the search string to the viewmodel
          if (!String.IsNullOrEmpty(search)) {
             products = products.Where(p => p.Name.Contains(search) ||
             p.Description.Contains(search) ||
             p.Category.Name.Contains(search));
+            viewModel.Search = search;
          }
-         return View(products.ToList());
+
+         // group the results into groups and count how many items in each category 
+         viewModel.CatsWithCount = from p in products
+                                   where
+                                   p.CategoryID != null
+                                   group p by p.Category.Name into catGroup
+                                   select new CategoryWithCount() {
+                                      CategoryName = catGroup.Key,
+                                      ProductCount = catGroup.Count()
+                                   };
+
+        
+         if (!String.IsNullOrEmpty(category)) {
+            products = products.Where(p => p.Category.Name == category);
+         }
+
+         viewModel.Products = products;
+         return View(viewModel);
       }
 
       // GET: Products/Details/5

@@ -52,12 +52,29 @@ namespace BreakAwayConsole {
          // deleteTrip();
 
          // exemple of on delete cascade
-         deleteGrandCanyonDestination();
+         //deleteGrandCanyonDestination();
+
+         // test iquerable 
+         //TestChainingIQueryable();
 
 
 
          #endregion
 
+      }
+
+      private static void TestChainingIQueryable() {
+         using (var db = new BreakAwayContext()) {
+            IQueryable<int> destIds = from d in db.Destinations
+                                      where d.DestinationId == 1
+                                      select d.DestinationId;
+
+            IQueryable<Lodging> log = from l in db.Lodgings
+                                      where destIds.Contains(l.DestinationId)
+                                      select l;
+
+            var lsList = log.ToList();
+         }
       }
 
       // illustration of delete on cascade 
