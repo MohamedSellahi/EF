@@ -57,10 +57,52 @@ namespace BreakAwayConsole {
          // test iquerable 
          //TestChainingIQueryable();
 
+         // Multiple changes at once
+         // MakeMultipleChanges();
+
+         // the find add pattern
+         // FidOrAddPerson();
+
+         // working with relationships 
+
 
 
          #endregion
 
+         #region Chapter 4
+
+         #endregion
+
+      }
+
+      private static void FidOrAddPerson() {
+         using (var db = new BreakAwayContext()) {
+            var ssn = 123456789;
+            var person = db.People.Find(ssn) ?? db.People.Add(new Person {
+               SocialSecurityNumber = ssn,
+               FirstName = "Mohamed",
+               LastName = "Sellahi",
+               Photo = new PersonPhoto()
+            });
+
+            db.SaveChanges();
+            Console.WriteLine(person.FirstName);
+         }
+      }
+
+      private static void MakeMultipleChanges() {
+         using (var db = new BreakAwayContext()) {
+            var niagaraFalls = new Destination {
+               Name = "Niagara Falls",
+               Country = "USA"
+            };
+            db.Destinations.Add(niagaraFalls);
+            var wineGlassBay = (from d in db.Destinations
+                                where d.Name == "WINE Glass Bay"
+                                select d).Single();
+            wineGlassBay.Description = "Picturesque bay with beaches.";
+            db.SaveChanges();
+         }
       }
 
       private static void TestChainingIQueryable() {
