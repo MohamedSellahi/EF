@@ -7,7 +7,7 @@ using System.Web;
 
 namespace BabyStore.DAL {
    public class StoreContext:DbContext {
-      public StoreContext():base("BabyStore") {}
+      public StoreContext():base("BabyStore2") {}
       public DbSet<Product> Products { get; set; }
       public DbSet<Category> Categories { get; set; }
    }
