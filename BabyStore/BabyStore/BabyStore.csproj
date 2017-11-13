@@ -193,17 +193,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201711111837173_InitialDatabase.cs" />
-    <Compile Include="Migrations\201711111837173_InitialDatabase.Designer.cs">
-      <DependentUpon>201711111837173_InitialDatabase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201711111927026_CategoryNameValidation.cs" />
-    <Compile Include="Migrations\201711111927026_CategoryNameValidation.Designer.cs">
-      <DependentUpon>201711111927026_CategoryNameValidation.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201711111943569_ProductNameValidation.cs" />
-    <Compile Include="Migrations\201711111943569_ProductNameValidation.Designer.cs">
-      <DependentUpon>201711111943569_ProductNameValidation.cs</DependentUpon>
+    <Compile Include="Migrations\201711132108169_InitialCreate.cs" />
+    <Compile Include="Migrations\201711132108169_InitialCreate.Designer.cs">
+      <DependentUpon>201711132108169_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Category.cs" />
@@ -245,14 +237,8 @@
     <Folder Include="Views\Product\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201711111837173_InitialDatabase.resx">
-      <DependentUpon>201711111837173_InitialDatabase.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201711111927026_CategoryNameValidation.resx">
-      <DependentUpon>201711111927026_CategoryNameValidation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201711111943569_ProductNameValidation.resx">
-      <DependentUpon>201711111943569_ProductNameValidation.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201711132108169_InitialCreate.resx">
+      <DependentUpon>201711132108169_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

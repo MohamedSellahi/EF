@@ -7,13 +7,13 @@ namespace BabyStore.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class ProductNameValidation : IMigrationMetadata
+    public sealed partial class InitialCreate : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ProductNameValidation));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialCreate));
         
         string IMigrationMetadata.Id
         {
-            get { return "201711111943569_ProductNameValidation"; }
+            get { return "201711132108169_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

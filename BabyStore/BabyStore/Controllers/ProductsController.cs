@@ -9,135 +9,140 @@ using System.Web.Mvc;
 using BabyStore.DAL;
 using BabyStore.Models;
 using BabyStore.ViewModels;
+//using BabyStore.Migrations;
 
 namespace BabyStore.Controllers {
-   public class ProductsController : Controller {
-      private StoreContext db = new StoreContext();
+  public class ProductsController:Controller {
+    private StoreContext db = new StoreContext();
 
-      // GET: Products
-      public ActionResult Index(string category, string search) {
-         // instantiate a new view model 
-         ProductIndexviewModel viewModel = new ProductIndexviewModel();
+    //public ProductsController() {
+    //  Database.SetInitializer(new InitializeDb());
+    //}
+    // GET: Products
+    public ActionResult Index(string category,string search) {
+      
+      // instantiate a new view model 
+      ProductIndexviewModel viewModel = new ProductIndexviewModel();
 
-         // select the products 
-         var products = db.Products.Include(p => p.Category);
+      // select the products 
+      var products = db.Products.Include(p => p.Category);
 
-         // perfom the search and save the search string to the viewmodel
-         if (!String.IsNullOrEmpty(search)) {
-            products = products.Where(p => p.Name.Contains(search) ||
-            p.Description.Contains(search) ||
-            p.Category.Name.Contains(search));
-            viewModel.Search = search;
-         }
-
-         // group the results into groups and count how many items in each category 
-         viewModel.CatsWithCount = from p in products
-                                   where
-                                   p.CategoryID != null
-                                   group p by p.Category.Name into catGroup
-                                   select new CategoryWithCount() {
-                                      CategoryName = catGroup.Key,
-                                      ProductCount = catGroup.Count()
-                                   };
-
-        
-         if (!String.IsNullOrEmpty(category)) {
-            products = products.Where(p => p.Category.Name == category);
-         }
-
-         viewModel.Products = products;
-         return View(viewModel);
+      // perfom the search and save the search string to the viewmodel
+      if(!String.IsNullOrEmpty(search)) {
+        products = products.Where(p => p.Name.Contains(search) ||
+        p.Description.Contains(search) ||
+        p.Category.Name.Contains(search));
+        viewModel.Search = search;
       }
 
-      // GET: Products/Details/5
-      public ActionResult Details(int? id) {
-         if (id == null) {
-            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-         }
-         Product product = db.Products.Find(id);
-         if (product == null) {
-            return HttpNotFound();
-         }
-         return View(product);
+      // group the results into groups and count how many items in each category 
+      viewModel.CatsWithCount = from p in products
+                                where
+                                p.CategoryID != null
+                                group p by p.Category.Name into catGroup
+                                select new CategoryWithCount() {
+                                  CategoryName = catGroup.Key,
+                                  ProductCount = catGroup.Count()
+                                };
+
+
+      if(!String.IsNullOrEmpty(category)) {
+        products = products.Where(p => p.Category.Name == category);
       }
 
-      // GET: Products/Create
-      public ActionResult Create() {
-         ViewBag.CategoryID = new SelectList(db.Categories, "ID", "Name");
-         return View();
+      viewModel.Products = products;
+      return View(viewModel);
+    }
+
+    // GET: Products/Details/5
+    public ActionResult Details(int? id) {
+      if(id == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+      }
+      Product product = db.Products.Find(id);
+      if(product == null) {
+        return HttpNotFound();
+      }
+      return View(product);
+    }
+
+    // GET: Products/Create
+    public ActionResult Create() {
+      ViewBag.CategoryID = new SelectList(db.Categories,"ID","Name");
+      return View();
+    }
+
+    // POST: Products/Create
+    // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+    // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult Create([Bind(Include = "ID,Name,Description,Price,CategoryID")] Product product) {
+      if(ModelState.IsValid) {
+        db.Products.Add(product);
+        db.SaveChanges();
+        return RedirectToAction("Index");
       }
 
-      // POST: Products/Create
-      // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-      // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-      [HttpPost]
-      [ValidateAntiForgeryToken]
-      public ActionResult Create([Bind(Include = "ID,Name,Description,Price,CategoryID")] Product product) {
-         if (ModelState.IsValid) {
-            db.Products.Add(product);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-         }
+      ViewBag.CategoryID = new SelectList(db.Categories,"ID","Name",product.CategoryID);
+      return View(product);
+    }
 
-         ViewBag.CategoryID = new SelectList(db.Categories, "ID", "Name", product.CategoryID);
-         return View(product);
+    // GET: Products/Edit/5
+    public ActionResult Edit(int? id) {
+      if(id == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
       }
+      Product product = db.Products.Find(id);
+      if(product == null) {
+        return HttpNotFound();
+      }
+      ViewBag.CategoryID = new SelectList(db.Categories,"ID","Name",product.CategoryID);
+      return View(product);
+    }
 
-      // GET: Products/Edit/5
-      public ActionResult Edit(int? id) {
-         if (id == null) {
-            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-         }
-         Product product = db.Products.Find(id);
-         if (product == null) {
-            return HttpNotFound();
-         }
-         ViewBag.CategoryID = new SelectList(db.Categories, "ID", "Name", product.CategoryID);
-         return View(product);
+    // POST: Products/Edit/5
+    // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+    // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult Edit([Bind(Include = "ID,Name,Description,Price,CategoryID")] Product product) {
+      if(ModelState.IsValid) {
+        db.Entry(product).State = EntityState.Modified;
+        db.SaveChanges();
+        return RedirectToAction("Index");
       }
+      ViewBag.CategoryID = new SelectList(db.Categories,"ID","Name",product.CategoryID);
+      return View(product);
+    }
 
-      // POST: Products/Edit/5
-      // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-      // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-      [HttpPost]
-      [ValidateAntiForgeryToken]
-      public ActionResult Edit([Bind(Include = "ID,Name,Description,Price,CategoryID")] Product product) {
-         if (ModelState.IsValid) {
-            db.Entry(product).State = EntityState.Modified;
-            db.SaveChanges();
-            return RedirectToAction("Index");
-         }
-         ViewBag.CategoryID = new SelectList(db.Categories, "ID", "Name", product.CategoryID);
-         return View(product);
+    // GET: Products/Delete/5
+    public ActionResult Delete(int? id) {
+      if(id == null) {
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
       }
+      Product product = db.Products.Find(id);
+      if(product == null) {
+        return HttpNotFound();
+      }
+      return View(product);
+    }
 
-      // GET: Products/Delete/5
-      public ActionResult Delete(int? id) {
-         if (id == null) {
-            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-         }
-         Product product = db.Products.Find(id);
-         if (product == null) {
-            return HttpNotFound();
-         }
-         return View(product);
-      }
+    // POST: Products/Delete/5
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public ActionResult DeleteConfirmed(int id) {
+      Product product = db.Products.Find(id);
+      db.Products.Remove(product);
+      db.SaveChanges();
+      return RedirectToAction("Index");
+    }
 
-      // POST: Products/Delete/5
-      [HttpPost, ActionName("Delete")]
-      [ValidateAntiForgeryToken]
-      public ActionResult DeleteConfirmed(int id) {
-         Product product = db.Products.Find(id);
-         db.Products.Remove(product);
-         db.SaveChanges();
-         return RedirectToAction("Index");
+    protected override void Dispose(bool disposing) {
+      if(disposing) {
+        db.Dispose();
       }
-
-      protected override void Dispose(bool disposing) {
-         if (disposing) {
-            db.Dispose();
-         }
-         base.Dispose(disposing);
-      }
-   }
+      base.Dispose(disposing);
+    }
+  }
 }
