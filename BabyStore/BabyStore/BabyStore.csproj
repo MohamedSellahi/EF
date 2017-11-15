@@ -193,8 +193,10 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ProductImagesController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="DAL\StoreContext.cs" />
     <Compile Include="Global.asax.cs">
@@ -212,9 +214,18 @@
     <Compile Include="Migrations\201711111943569_ProductNameValidation.Designer.cs">
       <DependentUpon>201711111943569_ProductNameValidation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711151937125_ProductImages.cs" />
+    <Compile Include="Migrations\201711151937125_ProductImages.Designer.cs">
+      <DependentUpon>201711151937125_ProductImages.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711152043189_UniqueKeyFileName.cs" />
+    <Compile Include="Migrations\201711152043189_UniqueKeyFileName.Designer.cs">
+      <DependentUpon>201711152043189_UniqueKeyFileName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\ProductImage.cs" />
     <Compile Include="Models\ProductMetaData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\ProductIndexviewModel.cs" />
@@ -240,6 +251,11 @@
     <Content Include="Views\Products\Details.cshtml" />
     <Content Include="Views\Products\Edit.cshtml" />
     <Content Include="Views\Products\Index.cshtml" />
+    <Content Include="Views\ProductImages\Upload.cshtml" />
+    <Content Include="Views\ProductImages\Delete.cshtml" />
+    <Content Include="Views\ProductImages\Details.cshtml" />
+    <Content Include="Views\ProductImages\Edit.cshtml" />
+    <Content Include="Views\ProductImages\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -249,7 +265,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Product\" />
+    <Folder Include="Content\ProductImages\Thumbnails\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201711111837173_InitialDatabase.resx">
@@ -260,6 +276,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711111943569_ProductNameValidation.resx">
       <DependentUpon>201711111943569_ProductNameValidation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711151937125_ProductImages.resx">
+      <DependentUpon>201711151937125_ProductImages.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711152043189_UniqueKeyFileName.resx">
+      <DependentUpon>201711152043189_UniqueKeyFileName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

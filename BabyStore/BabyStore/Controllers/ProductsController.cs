@@ -60,9 +60,8 @@ namespace BabyStore.Controllers {
           break;
       }
 
-      const int pageItems = 3;
       int currentPage = page ?? 1;
-      viewModel.Products = products.ToPagedList(currentPage,pageItems);
+      viewModel.Products = products.ToPagedList(currentPage,Constants.pageItems);
       viewModel.SortBy = sortBy;
       viewModel.Sorts = new Dictionary<string,string> {
         { "Price low to high","price_lowest"},
