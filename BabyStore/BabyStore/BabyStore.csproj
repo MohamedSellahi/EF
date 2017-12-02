@@ -195,6 +195,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductImagesController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
@@ -256,6 +257,7 @@
     <Content Include="Views\ProductImages\Details.cshtml" />
     <Content Include="Views\ProductImages\Edit.cshtml" />
     <Content Include="Views\ProductImages\Index.cshtml" />
+    <Content Include="Views\Error\FileUploadLimitExeeded.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
