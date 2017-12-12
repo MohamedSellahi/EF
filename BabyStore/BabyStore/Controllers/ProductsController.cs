@@ -98,15 +98,36 @@ namespace BabyStore.Controllers {
       // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
       [HttpPost]
       [ValidateAntiForgeryToken]
-      public ActionResult Create([Bind(Include = "ID,Name,Description,Price,CategoryID")] Product product) {
+      public ActionResult Create(ProductViewModel viewModel) {
+         Product product = new Product();
+         product.Name = viewModel.Name;
+         product.Description = viewModel.Description;
+         product.Price = viewModel.Price;
+         product.CategoryID = viewModel.CategoryID;
+         product.ProductImageMappings = new List<ProductImageMapping>();
+         // get a list of selected images without any blanks
+         string[] productImagesNames = viewModel.ProductImages.Where(pi => !String.IsNullOrEmpty(pi)).ToArray();
+
+         for(int i = 0;i < productImagesNames.Length;i++) {
+            product.ProductImageMappings.Add(new ProductImageMapping {
+               productImage = db.ProductImages.Find(int.Parse(productImagesNames[i])),
+               imageNumber = i,
+            });
+         }
+
          if(ModelState.IsValid) {
             db.Products.Add(product);
             db.SaveChanges();
             return RedirectToAction("Index");
          }
+         viewModel.CategoryList = new SelectList(db.Categories,"ID","Name");
+         viewModel.ImageLists = new List<SelectList>();
+         for(int i = 0;i < Constants.NumberOfProductImages;i++) {
+            viewModel.ImageLists.Add(new SelectList(db.ProductImages,"ID","FileName",viewModel.ProductImages[i]));
+         }
 
          ViewBag.CategoryID = new SelectList(db.Categories,"ID","Name",product.CategoryID);
-         return View(product);
+         return View(viewModel);
       }
 
       // GET: Products/Edit/5

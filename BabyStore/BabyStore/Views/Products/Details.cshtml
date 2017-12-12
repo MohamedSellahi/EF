@@ -1,50 +1,62 @@
 ﻿@model BabyStore.Models.Product
 
 @{
-    ViewBag.Title = "Details";
+   ViewBag.Title = "Details";
 }
 
 <h2>Details</h2>
 
 <div>
-    <h4>Product</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Category.Name)
-        </dt>
+   <h4>Product</h4>
+   <hr />
+   <dl class="dl-horizontal">
+      <dt>
+         @Html.DisplayNameFor(model => model.Category.Name)
+      </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Category.Name)
-        </dd>
+      <dd>
+         @Html.DisplayFor(model => model.Category.Name)
+      </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+      <dt>
+         @Html.DisplayNameFor(model => model.Name)
+      </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+      <dd>
+         @Html.DisplayFor(model => model.Name)
+      </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
+      <dt>
+         @Html.DisplayNameFor(model => model.Description)
+      </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
+      <dd>
+         @Html.DisplayFor(model => model.Description)
+      </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
+      <dt>
+         @Html.DisplayNameFor(model => model.Price)
+      </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Price)
-        </dd>
+      <dd>
+         @Html.DisplayFor(model => model.Price)
+      </dd>
+      @if(Model.ProductImageMappings != null && Model.ProductImageMappings.Any()) {
+         <dt></dt>
+         <dd>
+            <img src="@(Url.Content(Constants.productImagePath)+ Model.ProductImageMappings.OrderBy(pim=>pim.imageNumber).ElementAt(0).productImage.FileName)" style="padding:5px;"/>
+         </dd>
+         <dt></dt>
+         <dd>
+            @foreach(var item in Model.ProductImageMappings.OrderBy(pim=>pim.imageNumber)) {
+               <a href="@(Url.Content(Constants.productImagePath) + item.productImage.FileName)"><img src="@(Url.Content(Constants.productThumbnailPath) + item.productImage.FileName)"/></a>
+            }
+         </dd>
+      }
 
-    </dl>
+   </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-    @Html.ActionLink("Back to List", "Index")
+   @Html.ActionLink("Edit","Edit",new { id = Model.ID }) |
+   @Html.ActionLink("Back to List","Index")
 </p>
