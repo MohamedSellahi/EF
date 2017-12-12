@@ -12,6 +12,7 @@ using BabyStore.Models;
 using System.Web.Helpers;
 using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace BabyStore.Controllers {
    public class ProductImagesController:Controller {
@@ -44,44 +45,79 @@ namespace BabyStore.Controllers {
       // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
       [HttpPost]
       [ValidateAntiForgeryToken]
-      public ActionResult Upload(HttpPostedFileBase file) {
-         // check if the user has entered a file 
-         if(file != null) {
-            // check if the file is valid
-            if(validateFile(file)) {
-               try {
-                  saveFileToDisk(file);
+      public ActionResult Upload(HttpPostedFileBase[] files) {
+         bool allValid = true;
+         string inValidFiles = string.Empty;
+         db.Database.Log = sql => Trace.WriteLine(sql);
+         // check the user has entered a file 
+         if(files[0] != null) {
+            // if the user has entered less than 10 files 
+            if(files.Length <= 10) {
+               foreach(var file in files) {
+                  if(!validateFile(file)) {
+                     allValid = false;
+                     inValidFiles += ", " + file.FileName;
+                  }
                }
-               catch(Exception e) {
-                  ModelState.AddModelError("FileName","Sorry an error occured when savinf the file to disk, please try again");
-               }
-            }
-            else {
-               ModelState.AddModelError("FileName","The file must be gif, png, jpeg or jpg and less than 2MB in size");
-            }
-         }
-         else {// no file has been uploaded 
-            ModelState.AddModelError("FileName","Please choose a file");
-         }
-
-         if(ModelState.IsValid) {
-            db.ProductImages.Add(new ProductImage { FileName = file.FileName });
-            try {
-               db.SaveChanges();
-            }
-            catch(DbUpdateException e) {
-               SqlException innerExeption = e.InnerException.InnerException as SqlException;
-               if(innerExeption != null && innerExeption.Number == 2601) {
-                  ModelState.AddModelError("FileName","The file " + file.FileName + "already exists in the system. Please delete it and try to add it gain if you wish to re-add it");
+               // if they are all valid try to save them to disk 
+               if(allValid) {
+                  foreach(var file in files) {
+                     try {
+                        saveFileToDisk(file);
+                     }
+                     catch(Exception) {
+                        ModelState.AddModelError("FileName","Sorry, an error occured savig file to the disk, please try again");
+                     }
+                  }
                }
                else {
-                  ModelState.AddModelError("FileName","Sorry an error has accured during saving to the database, please try again");
+                  ModelState.AddModelError("FileName","All files must be gif, png, jpeg or jpg and less than 2MB in size.The following files" + inValidFiles + " are not valid");
                }
+            }
+            else { // the user has entered more than 10 files 
+               ModelState.AddModelError("FileName","Please only uplaod ten files at a time");
+            }
+         }
+         else {
+            // no files have been entered 
+            ModelState.AddModelError("FileName","Please choose a file");
+         }
+         if(ModelState.IsValid) {
+            // try add files to database 
+            bool duplicates = false;
+            bool otherDbError = false;
+            string duplicateFiles = string.Empty;
+            foreach(var file in files) {
+               //try and save each file 
+               var productToAdd = new ProductImage { FileName = file.FileName };
+               try {
+                  db.ProductImages.Add(productToAdd);
+                  db.SaveChanges();
+               }
+               catch(DbUpdateException ex) {
+                  SqlException innerException = ex.InnerException.InnerException as SqlException;
+                  if(innerException != null && innerException.Number == 2601) {
+                     duplicateFiles += ", " + file.FileName;
+                     duplicates = true;
+                     db.Entry(productToAdd).State = EntityState.Detached;
+                  }
+                  else {
+                     otherDbError = true;
+                  }
+               }
+            }
+            //add a list of duplicate files to the error message
+            if(duplicates) {
+               ModelState.AddModelError("FileName","All files uploaded except the files" +
+               duplicateFiles + ", which already exist in the system." + " Please delete them and try again if you wish to re - add them");
+               return View();
+            }
+            else if(otherDbError) {
+               ModelState.AddModelError("FileName","Sorry an error has occurred saving to the database,please try again");
                return View();
             }
             return RedirectToAction("Index");
          }
-
          return View();
       }
 
