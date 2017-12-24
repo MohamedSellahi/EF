@@ -171,6 +171,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.2.1.js" />
     <Content Include="Scripts\jquery-3.2.1.min.js" />
@@ -203,29 +204,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201711111837173_InitialDatabase.cs" />
-    <Compile Include="Migrations\201711111837173_InitialDatabase.Designer.cs">
-      <DependentUpon>201711111837173_InitialDatabase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201711111927026_CategoryNameValidation.cs" />
-    <Compile Include="Migrations\201711111927026_CategoryNameValidation.Designer.cs">
-      <DependentUpon>201711111927026_CategoryNameValidation.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201711111943569_ProductNameValidation.cs" />
-    <Compile Include="Migrations\201711111943569_ProductNameValidation.Designer.cs">
-      <DependentUpon>201711111943569_ProductNameValidation.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201711151937125_ProductImages.cs" />
-    <Compile Include="Migrations\201711151937125_ProductImages.Designer.cs">
-      <DependentUpon>201711151937125_ProductImages.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201711152043189_UniqueKeyFileName.cs" />
-    <Compile Include="Migrations\201711152043189_UniqueKeyFileName.Designer.cs">
-      <DependentUpon>201711152043189_UniqueKeyFileName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201712122003251_CreateProductMappings.cs" />
-    <Compile Include="Migrations\201712122003251_CreateProductMappings.Designer.cs">
-      <DependentUpon>201712122003251_CreateProductMappings.cs</DependentUpon>
+    <Compile Include="Migrations\201712242045209_init.cs" />
+    <Compile Include="Migrations\201712242045209_init.Designer.cs">
+      <DependentUpon>201712242045209_init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Category.cs" />
@@ -276,23 +257,8 @@
     <Folder Include="Content\ProductImages\Thumbnails\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201711111837173_InitialDatabase.resx">
-      <DependentUpon>201711111837173_InitialDatabase.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201711111927026_CategoryNameValidation.resx">
-      <DependentUpon>201711111927026_CategoryNameValidation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201711111943569_ProductNameValidation.resx">
-      <DependentUpon>201711111943569_ProductNameValidation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201711151937125_ProductImages.resx">
-      <DependentUpon>201711151937125_ProductImages.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201711152043189_UniqueKeyFileName.resx">
-      <DependentUpon>201711152043189_UniqueKeyFileName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712122003251_CreateProductMappings.resx">
-      <DependentUpon>201712122003251_CreateProductMappings.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201712242045209_init.resx">
+      <DependentUpon>201712242045209_init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

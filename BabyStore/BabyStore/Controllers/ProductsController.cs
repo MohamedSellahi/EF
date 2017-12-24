@@ -139,8 +139,22 @@ namespace BabyStore.Controllers {
          if(product == null) {
             return HttpNotFound();
          }
-         ViewBag.CategoryID = new SelectList(db.Categories,"ID","Name",product.CategoryID);
-         return View(product);
+         ProductViewModel viewModel = new ProductViewModel();
+         viewModel.CategoryList = new SelectList(db.Categories, "ID", "Name", product.CategoryID);
+         viewModel.ImageLists = new List<SelectList>();
+
+         foreach (var imageMapping in product.ProductImageMappings.OrderBy(pim => pim.imageNumber)) {
+            viewModel.ImageLists.Add(new SelectList(db.ProductImages, "ID", "FileName", imageMapping.productImageId));
+         }
+         for (int i = viewModel.ImageLists.Count; i < Constants.NumberOfProductImages; i++) {
+            viewModel.ImageLists.Add(new SelectList(db.ProductImages, "ID", "FileName"));
+         }
+
+         viewModel.Id = product.ID;
+         viewModel.Name = product.Name;
+         viewModel.Description = product.Description;
+         viewModel.Price = product.Price;
+         return View(viewModel);
       }
 
       // POST: Products/Edit/5
@@ -148,14 +162,52 @@ namespace BabyStore.Controllers {
       // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
       [HttpPost]
       [ValidateAntiForgeryToken]
-      public ActionResult Edit([Bind(Include = "ID,Name,Description,Price,CategoryID")] Product product) {
-         if(ModelState.IsValid) {
-            db.Entry(product).State = EntityState.Modified;
+      public ActionResult Edit(ProductViewModel viewModel) {
+         var productToupdate = db.Products.Include(p => p.ProductImageMappings).Where(p => p.ID == viewModel.Id).Single();
+
+         if (TryUpdateModel(productToupdate,"",new string[] { "Name","Description","Price","CategoryID"})) {
+            if (productToupdate.ProductImageMappings != null) {
+               productToupdate.ProductImageMappings = new List<ProductImageMapping>();
+            }
+
+            // get a list of selected images without any blanks 
+            string[] productImages = viewModel.ProductImages.Where(pi => !String.IsNullOrEmpty(pi)).ToArray();
+            for (int i = 0; i < productImages.Length; i++) {
+               // get the images currently stored 
+               var imageMappingToEdit = productToupdate.ProductImageMappings.Where(pim => pim.imageNumber == i).FirstOrDefault();
+               // find the new image 
+               var image = db.ProductImages.Find(int.Parse(productImages[i]));
+               // there is no thing stored then we need to add a new mapping 
+               if (imageMappingToEdit == null) {
+                  productToupdate.ProductImageMappings.Add(new ProductImageMapping() {
+                     Id = i,
+                     productImage = image,
+                     productImageId = image.ID
+                  });
+               }
+               else {
+                  // if  they are not the same 
+                  if (imageMappingToEdit.productImageId != int.Parse(productImages[i])) {
+                     // assign new image 
+                     imageMappingToEdit.productImage = image;
+                  }
+               }
+            }
+            // delete any other mapping the user did not include in their selections for the product 
+            for (int i = productImages.Length; i < Constants.NumberOfProductImages; i++) {
+               var imageMappingToEdit = productToupdate.ProductImageMappings.Where(pim => pim.imageNumber == i).FirstOrDefault();
+               if (imageMappingToEdit!=null) {
+                  // delete the record from the mapping table directly 
+                  //just calling productToUpdate.ProductImageMappings.Remove(imageMappingToEdit)
+                  //results in a FK error
+                  db.ProductImageMappings.Remove(imageMappingToEdit);
+               }
+            }
+
             db.SaveChanges();
             return RedirectToAction("Index");
          }
-         ViewBag.CategoryID = new SelectList(db.Categories,"ID","Name",product.CategoryID);
-         return View(product);
+         return View(viewModel);
       }
 
       // GET: Products/Delete/5

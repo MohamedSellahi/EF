@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="BreakAwayContext.cs" />
     <Compile Include="InitializeBagaDatabaseWithSeedData.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
