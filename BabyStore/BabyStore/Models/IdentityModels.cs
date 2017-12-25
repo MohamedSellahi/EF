@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,11 @@ namespace BabyStore.Models {
 
       public ApplicationDbContext():base("DefaultConnection",throwIfV1Schema:false) {
 
+      }
+
+      static ApplicationDbContext() {
+         // set the database initializer which is run once 
+         Database.SetInitializer(new ApplicationDbInitializer());
       }
 
       public static ApplicationDbContext Create() {
